@@ -3,8 +3,7 @@
 This repository contains a collection of project and activity files completed for the Application Development course.
 The contents cover the courses' complete curriculum, ranging from the fundamentals of PHP to advanced server-side development.
 
-<details open>
-<summary>Lesson 1 Data types, Variables and Built in functions</summary>
+### Lesson 1 Data types, Variables and Built in functions
 
 - Tags Printing and Comments
 - Variables
@@ -15,7 +14,9 @@ The contents cover the courses' complete curriculum, ranging from the fundamenta
 - String Functions
 - Date Function
 
-<summary>Lesson 2 Array and Iteration</summary>
+<hr/>
+
+### Lesson 2 Array and Iteration
 
 - Intro to Array
 - Array functions
@@ -25,7 +26,8 @@ The contents cover the courses' complete curriculum, ranging from the fundamenta
 - Nested Loops
 - Looping through array
 - Multi Dimensional Array Iteration
-</details>
+
+<hr/>
 
 ### Lesson 3 Control Structures and Conditionals
 
@@ -36,6 +38,8 @@ The contents cover the courses' complete curriculum, ranging from the fundamenta
 - Switch case statement
 - Ternary operator
 - Null Coalescing operator
+
+<hr/>
 
 ### Lesson 4 Functions
 
@@ -48,6 +52,8 @@ The contents cover the courses' complete curriculum, ranging from the fundamenta
 - Call Back Function
 - Arrow Function
 
+<hr/>
+
 ### Lesson 5 OOP
 
 - Creating a Class and Constructor
@@ -57,6 +63,8 @@ The contents cover the courses' complete curriculum, ranging from the fundamenta
 - Abstract Classes
 - Interfaces
 
+<hr/>
+
 ### Lesson 6 Super Globals
 
 - Super Global $\_GET
@@ -64,6 +72,8 @@ The contents cover the courses' complete curriculum, ranging from the fundamenta
 - Super GLobal $\_SESSION
 - Super Global $\_COOKIE
 - Super Global $\_FILES
+
+<hr/>
 
 ### Lesson 7 Database Integration and IPO
 
