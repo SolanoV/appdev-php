@@ -3,6 +3,8 @@
 This repository contains a collection of project and activity files completed for the Application Development course.
 The contents cover the courses' complete curriculum, ranging from the fundamentals of PHP to advanced server-side development.
 
+---
+
 ### Lesson 1 Data types, Variables and Built in functions
 
 - Tags Printing and Comments
