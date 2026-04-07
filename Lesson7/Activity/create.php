@@ -4,21 +4,27 @@ include('db.php');
 $errors = [];
 $title = '';
 $author = '';
+$publicationDate = ''; // 1. Initialize the new variable
 $descriptions = '';
 
 if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['submit'])){
-    $title=htmlspecialchars($_POST['title']??'');
-    $author=htmlspecialchars($_POST['author']??'');
-    $descriptions=htmlspecialchars($_POST['descriptions']??'');
+    // 2. Safely grab the data using trim() instead of htmlspecialchars() to prevent the &quot; bug!
+    $title = trim($_POST['title'] ?? '');
+    $author = trim($_POST['author'] ?? '');
+    $publicationDate = trim($_POST['publicationDate'] ?? ''); // Grab the date
+    $descriptions = trim($_POST['descriptions'] ?? '');
     $file=null;
 
-    if(empty(trim($title))) {
+    if(empty($title)) {
         $errors[] = "The Title field cannot be empty.";
     }
-    if(empty(trim($author))) {
+    if(empty($author)) {
         $errors[] = "The Author field cannot be empty.";
     }
-    if(empty(trim($descriptions))) {
+    if(empty($publicationDate)) { // 3. Validate the date
+        $errors[] = "The Publication Date field cannot be empty.";
+    }
+    if(empty($descriptions)) {
         $errors[] = "The Description field cannot be empty.";
     }
 
@@ -50,12 +56,14 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['submit'])){
             }
         }
 
-        $sql='INSERT INTO books(title, author, descriptions, bookCover) VALUES(:title, :author, :descriptions, :bookCover)';
+        // 4. Update the SQL query to include publicationDate
+        $sql='INSERT INTO books(title, author, publicationDate, descriptions, bookCover) VALUES(:title, :author, :publicationDate, :descriptions, :bookCover)';
         $stmt = $pdo->prepare($sql);
         
         $params = [
             'title'=>$title,
             'author'=>$author,
+            'publicationDate'=>$publicationDate, // 5. Bind the date parameter
             'descriptions'=>$descriptions,
             'bookCover'=>$filename
         ];  
@@ -111,17 +119,22 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['submit'])){
                             
                             <div class="form-group">
                                 <label for="title">Book Title</label>
-                                <input type="text" class="form-control" name="title" id="title" value="<?= $title ?>" placeholder="e.g., The Great Gatsby">
+                                <input type="text" class="form-control" name="title" id="title" value="<?= htmlspecialchars($title) ?>" placeholder="e.g., The Great Gatsby">
                             </div>
                             
                             <div class="form-group">
                                 <label for="author">Author</label>
-                                <input type="text" class="form-control" name="author" id="author" value="<?= $author ?>" placeholder="e.g., F. Scott Fitzgerald">
+                                <input type="text" class="form-control" name="author" id="author" value="<?= htmlspecialchars($author) ?>" placeholder="e.g., F. Scott Fitzgerald">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="publicationDate">Publication Date</label>
+                                <input type="date" class="form-control" name="publicationDate" id="publicationDate" value="<?= htmlspecialchars($publicationDate) ?>">
                             </div>
                             
                             <div class="form-group">
                                 <label for="descriptions">Description</label>
-                                <textarea class="form-control" name="descriptions" id="descriptions" rows="4" placeholder="Write a short summary..."><?= $descriptions ?></textarea>
+                                <textarea class="form-control" name="descriptions" id="descriptions" rows="4" placeholder="Write a short summary..."><?= htmlspecialchars($descriptions) ?></textarea>
                             </div>
                             
                             <div class="form-group">
