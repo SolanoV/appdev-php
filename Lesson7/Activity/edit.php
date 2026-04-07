@@ -1,16 +1,16 @@
 <?php
     include('db.php');
     
-    //get Id
-    $id=$_GET['id']??null;
+    // FIX 1: Check BOTH $_GET (when loading the page) and $_POST (when submitting the form)
+    $id = $_POST['id'] ?? $_GET['id'] ?? null;
 
     if(!$id){
         header('Location: main.php');
         exit;
     }
 
-    //SELECT statement with placeholder for id
-    $sql = "SELECT id, title, author, DATE_FORMAT(publicationDate, '%M %e, %Y') AS formattedDate, descriptions, bookCover FROM books WHERE id=:id";
+    // FIX 2: Removed DATE_FORMAT. The HTML <input type="date"> needs the raw yyyy-mm-dd date!
+    $sql = "SELECT id, title, author, publicationDate, descriptions, bookCover FROM books WHERE id=:id";
     $stmt = $pdo->prepare($sql);
     $params=['id'=>$id];
     $stmt->execute($params);
@@ -25,14 +25,17 @@
 
     $title = $_POST['title'] ?? $book['title'];
     $author = $_POST['author'] ?? $book['author'];
+    // FIX 3: Added publicationDate to the variables
+    $publicationDate = $_POST['publicationDate'] ?? $book['publicationDate'];
     $descriptions = $_POST['descriptions'] ?? $book['descriptions'];
 
     $isPutRequest=($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['_method']??'')==='put');
     
     if($isPutRequest){
-        $title = trim(htmlspecialchars($_POST['title']??''));
-        $author = trim(htmlspecialchars($_POST['author']??''));
-        $descriptions = trim(htmlspecialchars($_POST['descriptions']??'')); 
+        $title = trim($_POST['title'] ?? '');
+        $author = trim($_POST['author'] ?? '');
+        $publicationDate = trim($_POST['publicationDate'] ?? ''); 
+        $descriptions = trim($_POST['descriptions'] ?? '');
 
         if(empty($title)) {
             $errors[] = "The Title field cannot be empty.";
@@ -72,12 +75,14 @@
                 }
             }
 
-            $sql = 'UPDATE books SET title=:title, author=:author, descriptions=:descriptions, bookCover=:bookCover WHERE id=:id';
+            // FIX 5: Added publicationDate to the UPDATE query
+            $sql = 'UPDATE books SET title=:title, author=:author, publicationDate=:publicationDate, descriptions=:descriptions, bookCover=:bookCover WHERE id=:id';
             $stmt=$pdo->prepare($sql);
 
             $params=[
                 'title'=>$title,
                 'author'=>$author,
+                'publicationDate'=>$publicationDate, // Included in params
                 'descriptions'=>$descriptions,
                 'bookCover'=>$filename, 
                 'id'=>$id 
@@ -147,7 +152,7 @@
 
                             <div class="form-group">
                                 <label for="publicationDate">Publication Date</label>
-                                <input type="date" class="form-control" name="publicationDate" id="publicationDate" value="<?= htmlspecialchars($formattedDate) ?>">
+                                <input type="date" class="form-control" name="publicationDate" id="publicationDate" value="<?= htmlspecialchars($publicationDate) ?>">
                             </div>
                             
                             <div class="form-group">
