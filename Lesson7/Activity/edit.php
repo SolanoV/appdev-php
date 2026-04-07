@@ -23,8 +23,6 @@
 
     $errors = [];
 
-    // SMART UX FIX: Pre-fill variables with the database data on the first load. 
-    // If the form is submitted with an error, it will remember the user's new typed data instead!
     $title = $_POST['title'] ?? $book['title'];
     $author = $_POST['author'] ?? $book['author'];
     $descriptions = $_POST['descriptions'] ?? $book['descriptions'];
@@ -32,7 +30,6 @@
     $isPutRequest=($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['_method']??'')==='put');
     
     if($isPutRequest){
-        // We trim here so we don't need to do it inside every empty() check below
         $title = trim(htmlspecialchars($_POST['title']??''));
         $author = trim(htmlspecialchars($_POST['author']??''));
         $descriptions = trim(htmlspecialchars($_POST['descriptions']??'')); 

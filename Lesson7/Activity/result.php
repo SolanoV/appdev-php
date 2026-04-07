@@ -8,11 +8,18 @@
     $stmt->execute();
 
     // Fetch the results
-    $books = $stmt->fetchAll();
+    $books = $stmt->fetchAll(); 
 
     $keyword = '';
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])){
-        $keyword= htmlspecialchars($_POST['keyword']);
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['keyword'])) {
+        $keyword = $_POST['keyword'];   
+        
+        // If the keyword isn't empty, filter the books
+        if (!empty($keyword)) {
+            $books = array_filter($books, function($b) use ($keyword) {
+                return stripos($b['title'], $keyword) !== false || stripos($b['author'], $keyword) !== false;
+            });
+        }
     }
 ?>
 
@@ -86,21 +93,21 @@
                     </thead>
                     <tbody>
                         <?php foreach($books as $book):?>
-                        <tr>
-                            <td class="text-center">
-                                <?php if($book['bookCover']): ?>
-                                    <img src="uploads/<?= htmlspecialchars($book['bookCover']) ?>" class="img-thumbnail" style="width: 120px; height: auto;" alt="Cover">
-                                <?php else: ?>
-                                    <span class="text-muted"><i>No Cover</i></span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <a href="selected.php?id=<?= $book['id'] ?>"><strong><?= htmlspecialchars($book['title']) ?></strong></a>
-                            </td>
-                            <td><?= htmlspecialchars($book['author']) ?></td>
-                            <td><?= htmlspecialchars($book['publicationDate']) ?></td>
-                            <td><?= htmlspecialchars($book['descriptions']) ?></td>
-                        </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <?php if($book['bookCover']): ?>
+                                            <img src="uploads/<?= htmlspecialchars($book['bookCover']) ?>" class="img-thumbnail" style="width: 120px; height: auto;" alt="Cover">
+                                        <?php else: ?>
+                                            <span class="text-muted"><i>No Cover</i></span>
+                                        <?php endif; ?>
+                                    </td>
+                                <td>
+                                    <a href="selected.php?id=<?= $book['id'] ?>"><strong><?= htmlspecialchars($book['title']) ?></strong></a>
+                                    </td>
+                                    <td><?= htmlspecialchars($book['author']) ?></td>
+                                    <td><?= htmlspecialchars($book['publicationDate']) ?></td>
+                                    <td><?= htmlspecialchars($book['descriptions']) ?></td>
+                                </tr>
                         <?php endforeach;?>
                         
                         <?php if(empty($books)): ?>
